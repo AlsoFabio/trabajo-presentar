@@ -20,4 +20,5 @@ app.use(morgan('combined'));
 app.use(express.json());
 // rutas
 
+
 app.listen(port, console.log(`Conectado a : http//localhost:${port}`));
