@@ -1,4 +1,4 @@
-const {model, Schema} = require('moongose');
+const {model, Schema} = require('mongoose');
 
 const modeloUser =new Schema({
     name:{
@@ -14,7 +14,7 @@ const modeloUser =new Schema({
         require:true,
         unique:true,
     },
-    asActive:{
+    isActive:{
         type:Boolean,
         default:true,
     },
