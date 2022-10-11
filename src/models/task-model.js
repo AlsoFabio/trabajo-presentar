@@ -9,6 +9,14 @@ const modeloTask = new Schema({
         type:String,
         require:true,
     },
+    isActive:{
+    type:Boolean,
+    default:true,
+    },
+    isComplete:{
+        type:Boolean,
+        default:false,
+    }
 },
 {
     versionKey:false,
