@@ -1,4 +1,4 @@
-const mongo=require('moongose');
+const mongo=require('mongoose');
 
 const conneccion = async()=>{
     try {

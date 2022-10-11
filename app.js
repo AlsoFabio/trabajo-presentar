@@ -12,13 +12,14 @@ dbConnection();
 const app = express();
 
 // configuracion de variables de entorno
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // middlewares
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
+
 // rutas
+app.use(require('./src/routes/user-routes'))
 
-
-app.listen(port, console.log(`Conectado a : http//localhost:${port}`));
+app.listen(port, console.log(`Conectado a : http://localhost:${port}`));
