@@ -1,26 +1,25 @@
 const modeloUser = require('../models/user-model');
 const generadorJWT = require('../helper/generador-jwt');
 const bcrypt = require('bcrypt');
-const generarJWT = require('../helper/generador-jwt');
 
 const ctrlAuth = {};
 
-ctrlAuth.iniciarSesion = async(req,res)=>{
-    const {name, password}=req.body;
-
+ctrlAuth.iniciarSesion = async(req,res,next)=>{
+    
     try {
+        const {name, password}=req.body;
         const user = await modeloUser.findOne({ name });
         if(!user){
             return res.status(400).json({
                 ok: false,
-                msg: 'Error al autenticarse' - 'Usuario no encontrado'
+                msg: 'Error al autenticarse - Usuario no encontrado'
             });
         }
 
         if(!user.isActive) {
             return res.status(400).json({
                 ok:false,
-                msg: 'Error al autenticarse' - 'Usuario inactivo'
+                msg: 'Error al autenticarse - Usuario inactivo'
             });
         }
 
@@ -29,15 +28,15 @@ ctrlAuth.iniciarSesion = async(req,res)=>{
         if(!validarPassword){
             return res.status(400).json({
                 ok: false,
-                msg: 'Error al autenticarse' - 'Contraseña incorrecta'
+                msg: 'Error al autenticarse - Contraseña incorrecta'
             });
-        }
+        };
 
-        const token = await generarJWT({ uid: user._id })
+        const token = await generadorJWT(user._id)
 
         return res.json({token});
     } catch (error) {
-        return res.json({ msg: 'Error al iniciar sesión'});
+        return res.json({ msg: 'Error al iniciar sesión',error});
     }
 };
 

@@ -22,5 +22,7 @@ app.use(express.json());
 // rutas
 app.use(require('./src/routes/user-routes'));
 app.use(require('./src/routes/task-routes'));
+app.use(require('./src/routes/auth-routes'));
+
 
 app.listen(port, console.log(`Conectado a : http://localhost:${port}`));

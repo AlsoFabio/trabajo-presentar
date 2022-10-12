@@ -1,5 +1,5 @@
 const rutas = require('express').Router();
-
+const validarToken=require('../middlewares/validateJWT')
 const {
     getTasks,
     getTask,
@@ -9,9 +9,9 @@ const {
 } = require('../controllers/task.ctrl');
 
 rutas.get('/tasks', getTasks);
-rutas.get('/tasks/:idTask', getTask);
-rutas.post('/tasks', postTask);
-rutas.put('/tasks/:idTask', putTask);
-rutas.delete('/tasks/:idTask', deleteTask);
+rutas.get('/tasks/:idTask',[validarToken], getTask);
+rutas.post('/tasks',[validarToken], postTask);
+rutas.put('/tasks/:idTask',[validarToken], putTask);
+rutas.delete('/tasks/:idTask',[validarToken], deleteTask);
 
 module.exports = rutas;

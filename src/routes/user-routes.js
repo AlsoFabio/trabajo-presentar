@@ -1,4 +1,6 @@
 const rutas=require('express').Router();
+const validarToken=require('../middlewares/validateJWT');
+const admin=require('../middlewares/isAdmin');
 const { 
     getUsers,
     getUser,
@@ -7,10 +9,10 @@ const {
     deleteUser,
 } = require('../controllers/user-ctrl');
 
-rutas.get("/users",getUsers);
-rutas.get("/users/:idUser",getUser);
+rutas.get("/users",[validarToken],getUsers);
+rutas.get("/users/:idUser",[validarToken],getUser);
 rutas.post("/users",postUser);
-rutas.put("/users/:idUser",putUser);
-rutas.delete("/users/:idUser",deleteUser);
+rutas.put("/users/:idUser",[validarToken],putUser);
+rutas.delete("/users/:idUser",[validarToken],deleteUser);
 
 module.exports=rutas;
