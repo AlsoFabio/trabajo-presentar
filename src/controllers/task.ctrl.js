@@ -40,7 +40,7 @@ ctrlTask.getTask=async(req,res)=>{
 ctrlTask.getTaskUser=async(req,res)=>{
     try {
         const idUser = req.user._id
-        const task = await modeloTask.find({idUser})
+        const task = await modeloTask.find({$and:[{isActive:true},{idUser}]})
         .populate("idUser",['name', 'email']);
         if(!task){return res.json({
             message:"Tarea no encontrada",
@@ -90,20 +90,24 @@ ctrlTask.postTask=async(req,res)=>{
 // PUT tareas
 ctrlTask.putTask=async(req,res)=>{
 try {
+    const idUser=req.user._id;
     const id = req.params.idTask;
     const {title,description} = req.body;
     if(!title || !description){
         return res.json({message:"Campos vacios"});
     }
     const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
-    if(task){
-        await task.updateOne({
-            title,
-            description
-        });
-        return res.json({
-            message:"Tarea Actualizada"});
+    const userIDComparar=idUser.toString();
+    const taskIDComparar=task.idUser.toString();
+    if(!(userIDComparar===taskIDComparar)){
+        return res.json({message:"No tiene permiso para realizar esta acción"});
     }
+    await task.updateOne({
+        title,
+        description
+    });
+    return res.json({
+        message:"Tarea Actualizada"});
 } catch (error) {
     return res.json({message:"no se pudo actualizar la Tarea"})
 }   
