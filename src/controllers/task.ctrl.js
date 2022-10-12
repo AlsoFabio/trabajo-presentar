@@ -5,7 +5,8 @@ const ctrlTask = {};
 // GET tareas
 ctrlTask.getTasks=async(req,res)=>{
     try {
-        const task = await modeloTask.find({isActive: true});
+        const task = await modeloTask.find({isActive: true})
+        .populate("idUser",['name', 'email']);
         return res.json({
             message:`Tareas encontradas ${task.length}`,
             task
@@ -19,7 +20,8 @@ ctrlTask.getTasks=async(req,res)=>{
 ctrlTask.getTask=async(req,res)=>{
     try {
         const id = req.params.idTask;
-        const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
+        const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]})
+        .populate("idUser",['name', 'email']);
         if(!task){return res.json({
             message:"Tarea no encontrada",
         })}
@@ -34,14 +36,49 @@ ctrlTask.getTask=async(req,res)=>{
     }
 }
 
+// GET tareas por usuario
+ctrlTask.getTaskUser=async(req,res)=>{
+    try {
+        const idUser = req.user._id
+        const task = await modeloTask.find({idUser})
+        .populate("idUser",['name', 'email']);
+        if(!task){return res.json({
+            message:"Tarea no encontrada",
+        })}
+        
+        return res.json({
+            message:"Tarea encontrada",
+            task
+        })
+        
+    } catch (error) {
+        return res.status(404).json({message:"No se puede encontrar las tareas",error})
+    }
+}
+
+
 // POST tareas
 ctrlTask.postTask=async(req,res)=>{
     try {
+        const idUser = req.user._id;
         const {title,description} = req.body
+        if(!idUser||!title||!description){
+            return res.status(400).json({
+                message:"No se puede crear la tarea.",
+                descripcion:["idUser", "title", "description"]
+            });
+        }
+        const user = await modeloUser.findOne({_id:idUser});
+        if(!user){
+            return res.status(404).json({
+                message:"La cuenta no existe."
+            });
+        }
 
         const task = new modeloTask({
             title,
-            description
+            description,
+            idUser
         });
         await task.save();
         return res.json({message:"Tarea Creada"});
@@ -69,9 +106,10 @@ try {
     }
 } catch (error) {
     return res.json({message:"no se pudo actualizar la Tarea"})
+}   
 }
-   
-}
+
+// COMPLETAR tareas
 
 // DELETE tareas
 ctrlTask.deleteTask=async(req,res)=>{

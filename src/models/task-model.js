@@ -19,7 +19,7 @@ const modeloTask = new Schema({
     },
     idUser:{
         type:Schema.ObjectId,
-        ref: 'Users',
+        ref: 'users',
         required:true
     }
 },

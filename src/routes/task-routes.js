@@ -3,12 +3,14 @@ const validarToken=require('../middlewares/validateJWT')
 const {
     getTasks,
     getTask,
+    getTaskUser,
     postTask,
     putTask,
     deleteTask,
 } = require('../controllers/task.ctrl');
 
 rutas.get('/tasks', getTasks);
+rutas.get('/tasks/misTareas',[validarToken], getTaskUser);
 rutas.get('/tasks/:idTask',[validarToken], getTask);
 rutas.post('/tasks',[validarToken], postTask);
 rutas.put('/tasks/:idTask',[validarToken], putTask);

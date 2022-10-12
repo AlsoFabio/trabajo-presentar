@@ -44,8 +44,12 @@ ctrlUser.getUser=async(req,res)=>{
 ctrlUser.postUser=async(req,res)=>{
     try {
         const {name,password,email} = req.body;
+        if(!name || !password || !email){
+            return res.status(401).json({
+                message:`No se pudo generar usuario - Faltan datos`
+            })
+        }
         const newPassword = bcrypt.hashSync(password,10);
-        
         const newUser = new modelUser({
             name,
             password:newPassword,
