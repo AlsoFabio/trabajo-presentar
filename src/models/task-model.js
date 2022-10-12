@@ -16,6 +16,11 @@ const modeloTask = new Schema({
     isComplete:{
         type:Boolean,
         default:false,
+    },
+    idUser:{
+        type:Schema.ObjectId,
+        ref: 'Users',
+        required:true
     }
 },
 {

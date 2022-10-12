@@ -1,4 +1,5 @@
 const modeloTask = require('../models/task-model');
+const modeloUser = require('../models/user-model');
 const ctrlTask = {};
 
 // GET tareas
