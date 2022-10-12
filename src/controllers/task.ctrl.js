@@ -110,19 +110,59 @@ try {
 }
 
 // COMPLETAR tareas
+ctrlTask.putTaskComplete=async(req,res)=>{
+    try {
+        const idUser=req.user._id;
+        const id = req.params.idTask;
+
+        const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
+
+        const userIDComparar=idUser.toString();
+        const taskIDComparar=task.idUser.toString();
+        
+        if(!(userIDComparar===taskIDComparar)){
+            return res.status(404).json({
+                message:"No tiene permiso para realizar esta acción"
+            });
+        }
+        if(!task){
+            return res.json({message:"No se encontro la Tarea"});
+        }
+        await task.updateOne({
+            isComplete: true
+        });
+        return res.json({
+            message:"Tarea Completada"});
+    } catch (error) {
+        return res.json({message:"no se pudo completar la Tarea"})
+    }
+}
 
 // DELETE tareas
 ctrlTask.deleteTask=async(req,res)=>{
     try {
+        const idUser=req.user._id;
         const id = req.params.idTask;
+
         const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
-        if(task){
-            await task.updateOne({
-                isActive: false
-            });
-            return res.json({
-                message:"Tarea Eliminada"});
+        if(!task){
+            return res.status(404).json({message:"no se encontro la Tarea"});
         }
+
+        const userIDComparar=idUser.toString();
+        const taskIDComparar=task.idUser.toString();
+        
+        if(!(userIDComparar===taskIDComparar)){
+            return res.status(404).json({
+                message:"No tiene permiso para realizar esta acción"
+            });
+        }
+
+        await task.updateOne({
+            isActive: false
+        });
+        return res.json({
+            message:"Tarea Eliminada"});
     } catch (error) {
         return res.json({message:"no se pudo eliminar la Tarea"})
     }
