@@ -3,11 +3,11 @@ const {model, Schema} = require('mongoose');
 const modeloTask = new Schema({
     title:{
         type:String,
-        require:true,
+        required:true,
     },
     description:{
         type:String,
-        require:true,
+        required:true,
     },
     isActive:{
     type:Boolean,
@@ -16,6 +16,11 @@ const modeloTask = new Schema({
     isComplete:{
         type:Boolean,
         default:false,
+    },
+    idUser:{
+        type:Schema.ObjectId,
+        ref: 'users',
+        required:true
     }
 },
 {
