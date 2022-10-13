@@ -9,7 +9,7 @@ const {
     deleteUser,
 } = require('../controllers/user-ctrl');
 
-rutas.get("/users",[validarToken],getUsers);
+rutas.get("/users",[validarToken,admin],getUsers);
 rutas.get("/users/:idUser",[validarToken],getUser);
 rutas.post("/users",postUser);
 rutas.put("/users/:idUser",[validarToken],putUser);

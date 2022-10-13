@@ -25,11 +25,11 @@ ctrlUser.getUser=async(req,res)=>{
         const id = req.params.idUser;
         const user = await modelUser.findOne({$and:[{_id:id},{isActive:true}]});
         if(!user){return res.json({
-            message:"Usuarios no encontrado",
+            message:"Usuario no encontrado",
         })}
         if(user){
             return res.json({
-                message:"Usuarios encontrado",
+                message:"Usuario encontrado",
                 user
             })
         }
@@ -67,13 +67,23 @@ ctrlUser.postUser=async(req,res)=>{
 // PUT usuario 
 ctrlUser.putUser=async(req,res)=>{
     try {
+        const idUser=req.user._id;
         const id = req.params.idUser;
         const {name,password,email} = req.body;
         if(!id || !name || !password || !email){
             return res.json({message:"campos vacios"})
         }
-
+        
         const user = await modelUser.findOne({$and:[{_id:id},{isActive:true}]});
+
+        const userIDComparar=idUser.toString();
+        const taskIDComparar=user._id.toString();
+        if(!(userIDComparar===taskIDComparar)){
+            return res.status(404).json({
+                message:"No tiene permiso para realizar esta acción"
+            });
+        }
+
         if(user){
             const newPassword = bcrypt.hashSync(password,10);
             await user.updateOne({
@@ -93,8 +103,22 @@ ctrlUser.putUser=async(req,res)=>{
 // delete usuario
 ctrlUser.deleteUser=async(req,res)=>{
     try {
+        const idUser=req.user._id;
         const id = req.params.idUser;
+        
         const user = await modelUser.findOne({$and:[{_id:id},{isActive:true}]});
+        if(!user){return res.json({message:`El usuario no existe`});}
+
+
+        const userIDComparar=idUser.toString();
+        const taskIDComparar=user._id.toString();
+        if(!(userIDComparar===taskIDComparar)){
+            return res.status(404).json({
+                message:"No tiene permiso para realizar esta acción"
+            });
+        }
+
+
             await user.updateOne({
                 isActive:false
             })

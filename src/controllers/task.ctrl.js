@@ -41,9 +41,9 @@ ctrlTask.getTaskUser=async(req,res)=>{
     try {
         const idUser = req.user._id
         const task = await modeloTask.find({$and:[{isActive:true},{idUser}]})
-        .populate("idUser",['name', 'email']);
-        if(!task){return res.json({
-            message:"Tarea no encontrada",
+        .populate("idUser",['name', 'email'])
+        if(!task.length){return res.json({
+            message:"No tiene ninguna tarea creada",
         })}
         
         return res.json({
@@ -55,7 +55,6 @@ ctrlTask.getTaskUser=async(req,res)=>{
         return res.status(404).json({message:"No se puede encontrar las tareas",error})
     }
 }
-
 
 // POST tareas
 ctrlTask.postTask=async(req,res)=>{
@@ -97,6 +96,9 @@ try {
         return res.json({message:"Campos vacios"});
     }
     const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
+    if(!task){return res.json({   message:"La tarea no existe"});}
+    if(task.isComplete){return res.json({message:"La tarea esta completada, no se puede modificar"});}
+
     const userIDComparar=idUser.toString();
     const taskIDComparar=task.idUser.toString();
     if(!(userIDComparar===taskIDComparar)){
@@ -116,21 +118,22 @@ try {
 // COMPLETAR tareas
 ctrlTask.putTaskComplete=async(req,res)=>{
     try {
-        const idUser=req.user._id;
+        const idUser=req.user;
         const id = req.params.idTask;
 
         const task = await modeloTask.findOne({$and:[{_id:id},{isActive: true}]});
+        if(!task){
+            return res.json({message:"No se encontro la Tarea"});
+        }
+        if(task.isComplete){return res.json({message:"Tarea ya completada"});}
 
-        const userIDComparar=idUser.toString();
+        const userIDComparar=idUser._id.toString();
         const taskIDComparar=task.idUser.toString();
         
         if(!(userIDComparar===taskIDComparar)){
             return res.status(404).json({
                 message:"No tiene permiso para realizar esta acción"
             });
-        }
-        if(!task){
-            return res.json({message:"No se encontro la Tarea"});
         }
         await task.updateOne({
             isComplete: true

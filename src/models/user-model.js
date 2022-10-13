@@ -18,9 +18,9 @@ const modeloUser =new Schema({
         type:Boolean,
         default:true,
     },
-    isAdmin:{
-        type:Boolean,
-        dafault:false,
+    Role:{
+        type:String,
+        default:"No",
     }
 },
 {
