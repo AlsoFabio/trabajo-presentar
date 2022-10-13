@@ -1,10 +1,10 @@
 # Instituto Politécnico Formosa.
 ## Tec. en Desarrollo de Software Multiplataforma.
 
-### Unidad Temática 3 - Desarrollo back-end con __Node.js__ y **Express**.
+### Primer Examen Parcial - Back-End.
 
 
-![Node.js](https://res.cloudinary.com/practicaldev/image/fetch/s--KkScstnJ--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/zojuy79lo3fn3qdt7g6p.png)
+![Node.js](https://cdn.discordapp.com/avatars/320382643654885387/da398e2e3fa6acd867765248ee10acbf.webp?size=80)
 
 ### Para ejecutar el proyecto, se debe tener instalado __Node.js__ y __npm__.
 
