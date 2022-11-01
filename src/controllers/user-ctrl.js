@@ -6,7 +6,7 @@ const ctrlUser={};
 // GET usuarios
 ctrlUser.getUsers=async(req,res)=>{
     try {
-        const users = await modelUser.find({isActive:true});
+        const users = await modelUser.find();
 
         return res.json({
             message:`Usuarios encontrados ${users.length}`,
@@ -105,7 +105,7 @@ ctrlUser.deleteUser=async(req,res)=>{
     try {
         const idUser=req.user._id;
         const id = req.params.idUser;
-        
+
         const user = await modelUser.findOne({$and:[{_id:id},{isActive:true}]});
         if(!user){return res.json({message:`El usuario no existe`});}
 
